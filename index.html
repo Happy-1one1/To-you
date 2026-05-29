@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>To you v3</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      font-family: "Comic Sans MS", "Segoe Print", "Marker Felt", "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: #6f3a4c;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.95), transparent 26%),
+        radial-gradient(circle at 80% 15%, rgba(255, 220, 236, 0.95), transparent 28%),
+        linear-gradient(160deg, #ffeef6 0%, #fff9fb 48%, #ffe3ef 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(255, 150, 185, 0.25) 1px, transparent 2px),
+        radial-gradient(circle, rgba(255, 255, 255, 0.7) 1px, transparent 2px);
+      background-size: 24px 24px, 42px 42px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .phone {
+      position: relative;
+      width: min(100vw, 460px);
+      height: 100svh;
+      margin: 0 auto;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 0 50px rgba(255, 121, 170, 0.15);
+      z-index: 1;
+    }
+
+    .pages {
+      width: 900vw;
+      height: 100%;
+      display: flex;
+      transition: transform 780ms cubic-bezier(0.22, 0.98, 0.36, 1);
+      will-change: transform;
+    }
+
+    .page {
+      width: 100vw;
+      max-width: 460px;
+      height: 100svh;
+      flex: 0 0 min(100vw, 460px);
+      padding: 78px 24px 34px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 360px;
+      padding: 28px 22px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 18px 46px rgba(255, 123, 166, 0.2);
+      backdrop-filter: blur(12px);
+      animation: cardIn 680ms ease both;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      color: #ff6797;
+      letter-spacing: 0.5px;
+      text-shadow: 0 4px 18px rgba(255, 112, 160, 0.18);
+    }
+
+    h1 {
+      font-size: 34px;
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: 26px;
+      line-height: 1.25;
+    }
+
+    p {
+      margin: 14px 0 0;
+      font-size: 16px;
+      line-height: 1.85;
+    }
+
+    .small {
+      font-size: 13px;
+      opacity: 0.76;
+    }
+
+    .cute-btn {
+      margin-top: 22px;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 22px;
+      font-size: 15px;
+      color: #fff;
+      background: linear-gradient(135deg, #ff7fac, #ffadc9);
+      box-shadow: 0 12px 24px rgba(255, 111, 154, 0.28);
+      cursor: pointer;
+      font-family: inherit;
+      transform: translateY(0);
+      transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+    }
+
+    .cute-btn:active {
+      transform: translateY(2px) scale(0.98);
+      box-shadow: 0 7px 18px rgba(255, 111, 154, 0.22);
+    }
+
+    .ghost-btn {
+      margin-top: 14px;
+      border: 1px solid rgba(255, 122, 166, 0.34);
+      border-radius: 999px;
+      padding: 11px 17px;
+      font-size: 14px;
+      color: #ff6797;
+      background: rgba(255, 255, 255, 0.62);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .fade-in {
+      animation: fadeIn 420ms ease both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .music-btn {
+      position: fixed;
+      right: calc((100vw - min(100vw, 460px)) / 2 + 16px);
+      top: 18px;
+      z-index: 12;
+      border: none;
+      border-radius: 999px;
+      width: 46px;
+      height: 46px;
+      color: #ff6797;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 12px 28px rgba(255, 116, 160, 0.22);
+      font-size: 20px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .music-tip {
+      position: fixed;
+      top: 70px;
+      right: calc((100vw - min(100vw, 460px)) / 2 + 16px);
+      z-index: 12;
+      font-size: 11px;
+      color: #ff6797;
+      background: rgba(255, 255, 255, 0.74);
+      border-radius: 999px;
+      padding: 6px 10px;
+      box-shadow: 0 8px 20px rgba(255, 116, 160, 0.14);
+    }
+
+    .floating-heart {
+      position: fixed;
+      bottom: -40px;
+      color: rgba(255, 105, 150, 0.52);
+      animation: floatUp linear forwards;
+      z-index: 2;
+      pointer-events: none;
+      text-shadow: 0 4px 12px rgba(255, 135, 175, 0.2);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+      }
+      12% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-112vh) rotate(28deg) scale(1.25);
+        opacity: 0;
+      }
+    }
+
+    .big-heart {
+      width: 82px;
+      height: 82px;
+      margin: 0 auto 14px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(255, 231, 240, 0.84);
+      font-size: 42px;
+      animation: heartbeat 1.45s ease-in-out infinite;
+      box-shadow: inset 0 0 0 1px rgba(255, 155, 190, 0.35), 0 14px 30px rgba(255, 128, 172, 0.18);
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      35% { transform: scale(1.08); }
+      58% { transform: scale(0.98); }
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 15px 14px;
+      border-radius: 18px;
+      background: #fff5f9;
+      border: 1px dashed rgba(255, 112, 160, 0.42);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .heart-checks {
+      margin-top: 18px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .heart-check {
+      border: 1px solid rgba(255, 130, 172, 0.28);
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 18px;
+      padding: 11px 12px;
+      color: #7a3d51;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 220ms ease;
+    }
+
+    .heart-check.done {
+      color: #fff;
+      background: linear-gradient(135deg, #ff86b2, #ffb6ce);
+      transform: scale(1.02);
+      box-shadow: 0 10px 20px rgba(255, 127, 172, 0.18);
+    }
+
+    .polaroids {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .photo-card {
+      min-height: 62px;
+      border: none;
+      border-radius: 18px;
+      padding: 12px;
+      background: #fff;
+      box-shadow: 0 8px 18px rgba(255, 128, 172, 0.16);
+      color: #ff6797;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-card.revealed {
+      color: #714053;
+      background: #fff7fb;
+    }
+
+    .photo-card::before {
+      content: "♡";
+      position: absolute;
+      left: 12px;
+      top: 8px;
+      opacity: 0.25;
+      font-size: 24px;
+    }
+
+    .jar {
+      margin: 18px auto 0;
+      width: 135px;
+      height: 170px;
+      border: 3px solid rgba(255, 122, 166, 0.38);
+      border-top: 14px solid rgba(255, 122, 166, 0.45);
+      border-radius: 18px 18px 34px 34px;
+      background: rgba(255, 255, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: inset 0 -16px 30px rgba(255, 205, 222, 0.6), 0 12px 28px rgba(255, 128, 172, 0.12);
+    }
+
+    .jar-heart {
+      position: absolute;
+      font-size: 18px;
+      animation: popHeart 430ms ease both;
+    }
+
+    @keyframes popHeart {
+      from { opacity: 0; transform: translateY(14px) scale(0.4); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .reason-card {
+      margin: 20px auto 0;
+      min-height: 142px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, #fff, #fff2f7);
+      border: 1px solid rgba(255, 136, 178, 0.24);
+      box-shadow: 0 16px 32px rgba(255, 128, 172, 0.16);
+      display: grid;
+      place-items: center;
+      padding: 22px;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform 360ms ease;
+    }
+
+    .reason-card.bump {
+      animation: bump 300ms ease both;
+    }
+
+    @keyframes bump {
+      0% { transform: scale(1); }
+      55% { transform: scale(1.04) rotate(-1deg); }
+      100% { transform: scale(1); }
+    }
+
+    .reason-text {
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .hold-area {
+      margin-top: 22px;
+      width: 132px;
+      height: 132px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      border: none;
+      font-size: 44px;
+      background: radial-gradient(circle, #fff 0%, #ffe1ec 68%, #ffb4cd 100%);
+      box-shadow: 0 18px 38px rgba(255, 119, 163, 0.25);
+      cursor: pointer;
+      font-family: inherit;
+      color: #ff6797;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hold-area::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, rgba(255, 104, 151, 0.42) var(--hold, 0%), transparent 0);
+      mask: radial-gradient(circle, transparent 54%, black 56%);
+      -webkit-mask: radial-gradient(circle, transparent 54%, black 56%);
+    }
+
+    .final-options {
+      margin-top: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .option-btn {
+      border: none;
+      border-radius: 20px;
+      padding: 14px 13px;
+      color: #ff6797;
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: 0 10px 18px rgba(255, 128, 172, 0.14);
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid rgba(255, 145, 184, 0.22);
+    }
+
+    .confetti {
+      position: fixed;
+      pointer-events: none;
+      z-index: 20;
+      animation: confettiFall 1.5s ease forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(170px) scale(0.7) rotate(120deg); }
+    }
+
+
+
+    .test-panel {
+      position: fixed;
+      left: calc((100vw - min(100vw, 460px)) / 2 + 14px);
+      right: calc((100vw - min(100vw, 460px)) / 2 + 14px);
+      bottom: 14px;
+      z-index: 60;
+      display: none;
+      gap: 8px;
+      padding: 9px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(255, 136, 178, 0.26);
+      box-shadow: 0 14px 34px rgba(255, 112, 160, 0.24);
+      backdrop-filter: blur(12px);
+    }
+
+    body.test-mode .test-panel {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .test-panel button {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 6px;
+      font-size: 12px;
+      color: #ff6797;
+      background: #fff5f9;
+      border: 1px solid rgba(255, 145, 184, 0.22);
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .test-panel button:active {
+      transform: scale(0.97);
+    }
+
+    @media (min-width: 461px) {
+      .pages {
+        width: calc(460px * 9);
+      }
+
+      .page {
+        flex-basis: 460px;
+        width: 460px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 你的音乐文件请放在 index.html 同一个文件夹，并命名为 bgm.mp3 -->
+  <audio id="bgm" src="bgm.mp3" loop preload="auto"></audio>
+  <button class="music-btn" id="musicBtn" aria-label="音乐开关">♪</button>
+  <div class="music-tip" id="musicTip">点一下，有音乐</div>
+
+  <div class="test-panel" id="testPanel" aria-label="测试模块">
+    <button id="testPrev">测试上一页</button>
+    <button id="testReset">重置这一步</button>
+    <button id="testNext">测试下一页</button>
+  </div>
+
+
+  <main class="phone">
+    <section class="pages" id="pages">
+      <div class="page">
+        <div class="card">
+          <div class="big-heart">♡</div>
+          <h1>To：特别的你</h1>
+          <p>有些话，我想认真一点、慢慢一点告诉你。</p>
+          <p class="small">不是套路，也不是一时兴起，是我想好好说给你听。</p>
+          <button class="cute-btn" data-go="1">点这里，听我慢慢说</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <h2>先想跟你说一句</h2>
+          <p>最近我有些地方做得不够好，也有小错误让你不开心了。</p>
+          <button class="ghost-btn" id="openNote">打开这张小纸条</button>
+          <div class="note hidden" id="sorryNote">
+            我知道，关心不是等你难过了才出现，喜欢也不是嘴上说说。<br />
+            对不起，我会把你的感受放得更认真一点。
+          </div>
+          <button class="cute-btn hidden" id="sorryDone" data-go="2">我会认真记住</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <h2>我想做得更好</h2>
+          <p>请你点亮这三颗小心心，就当是提醒我以后要记住的事。</p>
+          <div class="heart-checks">
+            <button class="heart-check">♡ 更主动关心你的情绪</button>
+            <button class="heart-check">♡ 认真听你说话，不敷衍</button>
+            <button class="heart-check">♡ 不让你一个人消化委屈</button>
+          </div>
+          <button class="cute-btn hidden" id="promiseDone" data-go="3">这些我都会记住</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <h2>这些瞬间，我都记得</h2>
+          <p>点开三张小卡片，里面是我偷偷放好的心里话。</p>
+          <div class="polaroids">
+            <button class="photo-card" data-text="你笑起来的时候，我会觉得今天都变好了。">点开第一张小卡片</button>
+            <button class="photo-card" data-text="能陪着你聊天、陪着你开心或不开心，我其实都很珍惜。">点开第二张小卡片</button>
+            <button class="photo-card" data-text="我发现自己越来越想知道你过得好不好，也越来越想靠近你。">点开第三张小卡片</button>
+          </div>
+          <button class="cute-btn hidden" id="memoryDone" data-go="4">这些我真的都记得</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <h2>把不开心交给我一点点</h2>
+          <p>点这个小瓶子，把最近的不开心装进去，我想努力换成开心给你。</p>
+          <div class="jar" id="jar" aria-label="点击小瓶子收集爱心"></div>
+          <p class="small" id="jarText">轻轻点它 5 下</p>
+          <button class="cute-btn hidden" id="jarDone" data-go="5">我想让你多一点开心</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <h2>我喜欢你的原因</h2>
+          <p>点点这张卡片，我想把喜欢你的理由一张张翻给你看。</p>
+          <div class="reason-card" id="reasonCard">
+            <div class="reason-text" id="reasonText">点我一下 ♡</div>
+          </div>
+          <button class="cute-btn hidden" id="reasonDone" data-go="6">还有一句最重要的话</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <h2>这句话，我想认真说</h2>
+          <p>按住这颗心，等它慢慢装满。</p>
+          <button class="hold-area" id="holdHeart" style="--hold: 0%">♡</button>
+          <div class="note hidden" id="confessText">
+            我喜欢你。<br />
+            不是因为一时冲动，而是越相处越确定，你对我来说真的很特别。
+          </div>
+          <button class="cute-btn hidden" id="confessDone" data-go="7">我想认真陪着你</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <h2>我想问你一个很认真的问题</h2>
+          <p>如果你也愿意，我不想只是以普通朋友的身份陪着你。</p>
+          <p>我想让我们的关系再进一步，想更认真地关心你、陪着你。</p>
+          <div class="note">
+            所以，我想问你：<br />你愿意做我的女朋友吗？
+          </div>
+          <div class="final-options">
+            <button class="option-btn" data-final="从现在开始，我会认真把你放在心上，也会努力做一个让你安心的人。">愿意，我们的关系更进一步</button>
+            <button class="option-btn" data-final="这句话我会记很久很久。以后，请让我以男朋友的身份好好陪着你。">我愿意做你的女朋友</button>
+            <button class="option-btn" data-final="那你以后不开心的时候，也可以先告诉我。我会认真听，也会认真改。">那以后要好好表现</button>
+          </div>
+          <div class="note hidden" id="finalText"></div>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="card">
+          <div class="big-heart">♥</div>
+          <h2>谢谢你看到这里</h2>
+          <p>希望以后，我能以更认真的身份陪在你身边。</p>
+          <p class="small">不是只让你感动一次，而是想认真对你好很久。</p>
+          <button class="cute-btn" id="lastHeart">收下一颗小心心</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const pages = document.getElementById('pages');
+    const totalPages = document.querySelectorAll('.page').length;
+    let current = 0;
+    const TEST_MODE = new URLSearchParams(window.location.search).get('test') === '1';
+    if (TEST_MODE) document.body.classList.add('test-mode');
+
+    function pageWidth() {
+      return Math.min(window.innerWidth, 460);
+    }
+
+    function goTo(index) {
+      current = Math.max(0, Math.min(index, totalPages - 1));
+      pages.style.transform = `translateX(${-current * pageWidth()}px)`;
+      burstHearts(8);
+    }
+
+
+
+    function resetCurrentStep() {
+      switch (current) {
+        case 1:
+          sorryNote.classList.add('hidden');
+          sorryNote.classList.remove('fade-in');
+          sorryDone.classList.add('hidden');
+          openNote.textContent = '打开这张小纸条';
+          break;
+        case 2:
+          checks.forEach((btn, i) => {
+            btn.classList.remove('done');
+            btn.textContent = [
+              '♡ 更主动关心你的情绪',
+              '♡ 认真听你说话，不敷衍',
+              '♡ 不让你一个人消化委屈'
+            ][i];
+          });
+          promiseDone.classList.add('hidden');
+          break;
+        case 3:
+          photoCards.forEach((card, i) => {
+            card.classList.remove('revealed');
+            card.textContent = `点开第${['一', '二', '三'][i]}张小卡片`;
+          });
+          memoryDone.classList.add('hidden');
+          break;
+        case 4:
+          jarCount = 0;
+          jar.querySelectorAll('.jar-heart').forEach(item => item.remove());
+          jarText.textContent = '轻轻点它 5 下';
+          jarDone.classList.add('hidden');
+          break;
+        case 5:
+          reasonIndex = 0;
+          reasonText.textContent = '点我一下 ♡';
+          reasonCard.classList.remove('bump');
+          reasonDone.classList.add('hidden');
+          break;
+        case 6:
+          clearTimeout(holdTimer);
+          cancelAnimationFrame(holdFrame);
+          holdHeart.textContent = '♡';
+          holdHeart.style.setProperty('--hold', '0%');
+          confessText.classList.add('hidden');
+          confessText.classList.remove('fade-in');
+          confessDone.classList.add('hidden');
+          break;
+        case 7:
+          finalText.textContent = '';
+          finalText.classList.add('hidden');
+          finalText.classList.remove('fade-in');
+          break;
+        default:
+          burstHearts(6);
+      }
+    }
+
+    function bindTestModule() {
+      if (!TEST_MODE) return;
+      document.getElementById('testPrev').addEventListener('click', () => goTo(current - 1));
+      document.getElementById('testNext').addEventListener('click', () => goTo(current + 1));
+      document.getElementById('testReset').addEventListener('click', resetCurrentStep);
+    }
+
+
+    window.addEventListener('resize', () => goTo(current));
+
+    document.querySelectorAll('[data-go]').forEach(btn => {
+      btn.addEventListener('click', () => goTo(Number(btn.dataset.go)));
+    });
+
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('musicBtn');
+    const musicTip = document.getElementById('musicTip');
+    let musicPlaying = false;
+
+    musicBtn.addEventListener('click', async () => {
+      try {
+        if (!musicPlaying) {
+          await bgm.play();
+          musicPlaying = true;
+          musicBtn.textContent = 'Ⅱ';
+          musicTip.textContent = '音乐播放中';
+        } else {
+          bgm.pause();
+          musicPlaying = false;
+          musicBtn.textContent = '♪';
+          musicTip.textContent = '点一下，有音乐';
+        }
+      } catch (error) {
+        musicTip.textContent = '请确认 bgm.mp3 已放好';
+      }
+    });
+
+    const openNote = document.getElementById('openNote');
+    const sorryNote = document.getElementById('sorryNote');
+    const sorryDone = document.getElementById('sorryDone');
+
+    openNote.addEventListener('click', () => {
+      sorryNote.classList.remove('hidden');
+      sorryNote.classList.add('fade-in');
+      sorryDone.classList.remove('hidden');
+      openNote.textContent = '这句话我是真心的';
+      burstHearts(6);
+    });
+
+    const checks = document.querySelectorAll('.heart-check');
+    const promiseDone = document.getElementById('promiseDone');
+    checks.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.add('done');
+        btn.textContent = btn.textContent.replace('♡', '♥');
+        if ([...checks].every(item => item.classList.contains('done'))) {
+          promiseDone.classList.remove('hidden');
+          burstHearts(10);
+        }
+      });
+    });
+
+    const photoCards = document.querySelectorAll('.photo-card');
+    const memoryDone = document.getElementById('memoryDone');
+    photoCards.forEach(card => {
+      card.addEventListener('click', () => {
+        card.textContent = card.dataset.text;
+        card.classList.add('revealed');
+        if ([...photoCards].every(item => item.classList.contains('revealed'))) {
+          memoryDone.classList.remove('hidden');
+          burstHearts(10);
+        }
+      });
+    });
+
+    const jar = document.getElementById('jar');
+    const jarText = document.getElementById('jarText');
+    const jarDone = document.getElementById('jarDone');
+    let jarCount = 0;
+
+    jar.addEventListener('click', () => {
+      if (jarCount >= 5) return;
+      jarCount += 1;
+      const heart = document.createElement('span');
+      heart.className = 'jar-heart';
+      heart.textContent = ['♡', '♥', '💗', '💕', '💖'][jarCount - 1];
+      heart.style.left = `${18 + Math.random() * 82}px`;
+      heart.style.bottom = `${10 + Math.random() * 120}px`;
+      jar.appendChild(heart);
+      jarText.textContent = jarCount < 5 ? `还差 ${5 - jarCount} 下` : '装满啦';
+      if (jarCount === 5) {
+        jarDone.classList.remove('hidden');
+        burstHearts(12);
+      }
+    });
+
+    const reasons = [
+      '喜欢你，是因为和你说话的时候，我会不自觉变得很温柔。',
+      '喜欢你，是因为你的小情绪、小可爱，我都想认真接住。',
+      '喜欢你，是因为我想分享开心给你，也想陪你度过不开心。',
+      '喜欢你，是因为你出现以后，我开始想成为更好一点的人。'
+    ];
+    const reasonCard = document.getElementById('reasonCard');
+    const reasonText = document.getElementById('reasonText');
+    const reasonDone = document.getElementById('reasonDone');
+    let reasonIndex = 0;
+
+    reasonCard.addEventListener('click', () => {
+      reasonText.textContent = reasons[reasonIndex];
+      reasonCard.classList.remove('bump');
+      void reasonCard.offsetWidth;
+      reasonCard.classList.add('bump');
+      reasonIndex += 1;
+      if (reasonIndex >= reasons.length) {
+        reasonDone.classList.remove('hidden');
+        reasonText.textContent = reasons[reasons.length - 1];
+        burstHearts(12);
+      }
+    });
+
+    const holdHeart = document.getElementById('holdHeart');
+    const confessText = document.getElementById('confessText');
+    const confessDone = document.getElementById('confessDone');
+    let holdTimer = null;
+    let holdStart = 0;
+    let holdFrame = null;
+
+    function startHold(e) {
+      e.preventDefault();
+      holdStart = Date.now();
+      holdHeart.textContent = '♥';
+      holdFrame = requestAnimationFrame(updateHold);
+      holdTimer = setTimeout(() => {
+        stopHold(true);
+      }, 1300);
+    }
+
+    function updateHold() {
+      const percent = Math.min(100, ((Date.now() - holdStart) / 1300) * 100);
+      holdHeart.style.setProperty('--hold', `${percent}%`);
+      if (percent < 100) holdFrame = requestAnimationFrame(updateHold);
+    }
+
+    function stopHold(success) {
+      clearTimeout(holdTimer);
+      cancelAnimationFrame(holdFrame);
+      if (success) {
+        holdHeart.style.setProperty('--hold', '100%');
+        confessText.classList.remove('hidden');
+        confessText.classList.add('fade-in');
+        confessDone.classList.remove('hidden');
+        burstHearts(18);
+      } else if (holdHeart.style.getPropertyValue('--hold') !== '100%') {
+        holdHeart.style.setProperty('--hold', '0%');
+        holdHeart.textContent = '♡';
+      }
+    }
+
+    holdHeart.addEventListener('pointerdown', startHold);
+    holdHeart.addEventListener('pointerup', () => stopHold(false));
+    holdHeart.addEventListener('pointerleave', () => stopHold(false));
+    holdHeart.addEventListener('pointercancel', () => stopHold(false));
+
+    const finalText = document.getElementById('finalText');
+    document.querySelectorAll('[data-final]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        finalText.textContent = btn.dataset.final;
+        finalText.classList.remove('hidden');
+        finalText.classList.add('fade-in');
+        burstHearts(18);
+        setTimeout(() => goTo(8), 1700);
+      });
+    });
+
+    document.getElementById('lastHeart').addEventListener('click', () => {
+      burstHearts(30);
+    });
+
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.textContent = Math.random() > 0.5 ? '♡' : '♥';
+      const leftBase = (window.innerWidth - pageWidth()) / 2;
+      heart.style.left = `${leftBase + Math.random() * pageWidth()}px`;
+      heart.style.fontSize = `${14 + Math.random() * 18}px`;
+      heart.style.animationDuration = `${5 + Math.random() * 4}s`;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 9200);
+    }
+
+    function burstHearts(count) {
+      const symbols = ['♡', '♥', '💗', '💕', '💖'];
+      const leftBase = (window.innerWidth - pageWidth()) / 2;
+      for (let i = 0; i < count; i++) {
+        const confetti = document.createElement('span');
+        confetti.className = 'confetti';
+        confetti.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        confetti.style.left = `${leftBase + 40 + Math.random() * (pageWidth() - 80)}px`;
+        confetti.style.top = `${90 + Math.random() * (window.innerHeight - 220)}px`;
+        confetti.style.fontSize = `${16 + Math.random() * 18}px`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 1600);
+      }
+    }
+
+    bindTestModule();
+    setInterval(createFloatingHeart, 700);
+  </script>
+</body>
+</html>
