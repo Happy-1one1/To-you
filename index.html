@@ -1136,18 +1136,6 @@
       font-weight: 800;
       text-shadow: 0 3px 12px rgba(255, 160, 190, 0.16);
     }
-
-    .confess-page-scroll-tip {
-      margin-top: 8px;
-      color: #e46b98;
-      font-size: 13.5px;
-      font-weight: 900;
-      opacity: 0.82;
-      animation: softTipPulse 1.8s ease-in-out infinite;
-    }
-
-    @keyframes softTipPulse {
-      0%, 100% { opacity: 0.62; transform: translateY(0); }
       50% { opacity: 1; transform: translateY(2px); }
     }
 
@@ -1639,7 +1627,6 @@
             也并不是我喜欢的样子你都有，<span class="ending-nowrap">而是你的样子我都喜欢！</span>
 </div>
 <button class="cute-btn hidden" data-go="6" id="confessDone">关于以后，我还想说</button>
-<div class="confess-page-scroll-tip hidden" id="confessScrollTip">轻轻向上滑一下，还能继续看下面。</div>
 </div>
 </div>
 <div class="page">
@@ -1770,7 +1757,6 @@
           confessText.classList.add('hidden');
           confessText.classList.remove('fade-in');
           confessDone.classList.add('hidden');
-          confessScrollTip.classList.add('hidden');
           confessPage.scrollTo({ top: 0, left: 0, behavior: 'auto' });
           break;
         case 6:
@@ -1925,7 +1911,6 @@
     const heartHint = document.getElementById('heartHint');
     const confessText = document.getElementById('confessText');
     const confessDone = document.getElementById('confessDone');
-    const confessScrollTip = document.getElementById('confessScrollTip');
     let confessOpened = false;
 
     confessEnvelope.addEventListener('click', () => {
@@ -1939,7 +1924,6 @@
         confessText.classList.remove('hidden');
         confessText.classList.add('fade-in');
         confessDone.classList.remove('hidden');
-        confessScrollTip.classList.remove('hidden');
         requestAnimationFrame(() => {
           confessPage.scrollTo({ top: confessPage.scrollHeight, behavior: 'smooth' });
         });
