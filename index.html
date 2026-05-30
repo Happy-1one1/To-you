@@ -549,41 +549,101 @@
     .polaroids {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 10px;
+      gap: 13px;
       margin-top: 18px;
+      perspective: 900px;
     }
 
     .photo-card {
-      min-height: 62px;
-      border: none;
-      border-radius: 18px;
-      padding: 12px;
-      background: #fff;
-      box-shadow: 0 8px 18px rgba(255, 128, 172, 0.16);
+      min-height: 76px;
+      border: 1px solid rgba(255, 157, 192, 0.34);
+      border-radius: 22px;
+      padding: 16px 18px 15px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(255, 247, 220, 0.92)),
+        radial-gradient(circle at 18% 18%, rgba(255, 196, 216, 0.34), transparent 30%);
+      box-shadow:
+        0 12px 24px rgba(255, 128, 172, 0.18),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.72);
       color: #ff6797;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: 900;
       cursor: pointer;
       position: relative;
       overflow: hidden;
+      transform: rotate(-0.8deg);
+      transform-origin: center;
+      transition: transform 360ms cubic-bezier(0.18, 1.35, 0.32, 1), box-shadow 360ms ease, background 360ms ease;
     }
 
-    .photo-card.revealed {
-      color: #d65c8a;
-      background: linear-gradient(145deg, #fff7fb, #fff4dd);
-      border: 1px solid rgba(255, 164, 191, 0.28);
-      font-family: "Segoe Print", "Comic Sans MS", "Marker Felt", "Microsoft YaHei", "PingFang SC", cursive;
-      font-weight: 700;
-      box-shadow: 0 10px 22px rgba(255, 128, 172, 0.20);
+    .photo-card:nth-child(2) {
+      transform: rotate(0.7deg);
+    }
+
+    .photo-card:nth-child(3) {
+      transform: rotate(-0.4deg);
     }
 
     .photo-card::before {
-      content: "♡";
+      content: "";
       position: absolute;
-      left: 12px;
-      top: 8px;
-      opacity: 0.25;
-      font-size: 24px;
+      left: 50%;
+      top: -8px;
+      width: 72px;
+      height: 22px;
+      border-radius: 6px;
+      background: rgba(255, 218, 232, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      box-shadow: 0 3px 8px rgba(255, 145, 185, 0.12);
+      transform: translateX(-50%) rotate(-2deg);
+      opacity: 0.88;
+    }
+
+    .photo-card::after {
+      content: "✨";
+      position: absolute;
+      right: 15px;
+      bottom: 11px;
+      font-size: 17px;
+      opacity: 0.36;
+      transition: transform 420ms ease, opacity 320ms ease;
+    }
+
+    .photo-card:active {
+      transform: scale(0.98) rotate(0deg);
+    }
+
+    .photo-card.revealed {
+      color: #cf4f82;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0 18%, rgba(255, 248, 226, 0.94) 18% 100%),
+        repeating-linear-gradient(0deg, transparent 0 25px, rgba(255, 193, 212, 0.24) 26px 27px);
+      border: 1px solid rgba(255, 156, 188, 0.46);
+      font-family: "Comic Sans MS", "Segoe Print", "Marker Felt", "Microsoft YaHei", "PingFang SC", cursive;
+      font-weight: 900;
+      font-size: 16.2px;
+      line-height: 1.55;
+      box-shadow:
+        0 17px 32px rgba(255, 128, 172, 0.24),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.78);
+      transform: translateY(-2px) rotate(0deg) scale(1.015);
+    }
+
+    .photo-card.revealed::after {
+      content: "💗";
+      opacity: 0.82;
+      transform: scale(1.15) rotate(8deg);
+    }
+
+    .photo-card.just-opened {
+      animation: memoryCardOpen 560ms cubic-bezier(0.17, 1.34, 0.34, 1) both;
+    }
+
+    @keyframes memoryCardOpen {
+      0% { transform: rotateY(-8deg) scale(0.96); filter: brightness(0.98); }
+      46% { transform: rotateY(7deg) translateY(-5px) scale(1.035); filter: brightness(1.05); }
+      100% { transform: rotateY(0deg) translateY(-2px) scale(1.015); filter: brightness(1); }
     }
 
     .sweet-grid {
@@ -812,8 +872,8 @@
 
     .envelope-letter {
       position: absolute;
-      left: 19px;
-      right: 19px;
+      left: 14px;
+      right: 14px;
       top: 12px;
       height: 88px;
       border-radius: 18px;
@@ -822,8 +882,10 @@
       display: grid;
       place-items: center;
       color: #ff6797;
-      font-size: 15px;
-      font-weight: 800;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
       z-index: 1;
       transition: transform 760ms cubic-bezier(0.19, 1, 0.22, 1), opacity 360ms ease;
     }
@@ -1189,6 +1251,18 @@
       box-shadow: 0 7px 18px rgba(255, 141, 184, 0.14);
     }
 
+    .final-message-line {
+      display: block;
+      white-space: nowrap;
+      word-break: keep-all;
+      overflow-wrap: normal;
+      line-height: 1.72;
+    }
+
+    .final-message-line + .final-message-line {
+      margin-top: 4px;
+    }
+
     .confetti {
       position: fixed;
       pointer-events: none;
@@ -1267,8 +1341,8 @@
     }
 
     .miss-letter {
-      font-size: clamp(14.8px, 3.85vw, 16px);
-      line-height: 1.54;
+      font-size: clamp(16.2px, 4.35vw, 17.8px);
+      line-height: 1.62;
       letter-spacing: -0.42px;
     }
 
@@ -1351,9 +1425,9 @@
     }
 
     .talk-letter {
-      font-size: clamp(15px, 4vw, 16.4px);
-      line-height: 1.56;
-      padding: 15px 14px;
+      font-size: clamp(16.2px, 4.35vw, 17.8px);
+      line-height: 1.62;
+      padding: 16px 15px;
       letter-spacing: -0.45px;
     }
 
@@ -1388,7 +1462,7 @@
       h1 { font-size: 34px; }
       h2 { font-size: 27px; }
       p { font-size: 16.5px; line-height: 1.72; }
-      .talk-letter { font-size: 14.6px; line-height: 1.48; }
+      .talk-letter { font-size: 15.8px; line-height: 1.54; }
       .confess-long-text { font-size: 15px; line-height: 1.62; }
     }
 
@@ -1474,7 +1548,7 @@
 <p>我把最想说的话藏进一封小小的信里，轻轻点开它。</p>
 <div class="confess-stage" id="confessStage">
 <button aria-label="打开这封小信" class="confess-envelope" id="confessEnvelope">
-<span class="envelope-letter">写给你的信</span>
+<span class="envelope-letter nowrap-word">写给你的信</span>
 <span class="envelope-flap"></span>
 <span class="envelope-body"></span>
 <span class="envelope-seal">♡</span>
@@ -1545,7 +1619,7 @@
 <span class="final-question">你愿意做我的女朋友吗？</span>
 </div>
 <div class="final-options single-option">
-<button class="option-btn" data-final="我会继续认真说，也会继续认真做。谢谢你愿意听我把心里话说完！">我愿意听你继续说</button>
+<button class="option-btn" data-final-line1="我会继续认真说，也会继续认真做。" data-final-line2="谢谢你愿意听我把心里话说完！">我愿意听你继续说</button>
 </div>
 <div class="note reveal-note hidden" id="finalText"></div>
 </div>
@@ -1711,10 +1785,12 @@
     photoCards.forEach(card => {
       card.addEventListener('click', () => {
         setStyledText(card, card.dataset.text);
-        card.classList.add('revealed');
+        card.classList.add('revealed', 'just-opened');
+        setTimeout(() => card.classList.remove('just-opened'), 620);
+        burstHearts(5);
         if ([...photoCards].every(item => item.classList.contains('revealed'))) {
           memoryDone.classList.remove('hidden');
-          burstHearts(10);
+          burstHearts(12);
         }
       });
     });
@@ -1810,9 +1886,20 @@
 
     const finalText = document.getElementById('finalText');
     let finalTextReady = false;
-    document.querySelectorAll('[data-final]').forEach(btn => {
+    document.querySelectorAll('[data-final], [data-final-line1]').forEach(btn => {
       btn.addEventListener('click', () => {
-        setStyledText(finalText, btn.dataset.final);
+        if (btn.dataset.finalLine1) {
+          finalText.innerHTML = '';
+          [btn.dataset.finalLine1, btn.dataset.finalLine2].filter(Boolean).forEach(line => {
+            const span = document.createElement('span');
+            span.className = 'final-message-line';
+            span.textContent = line;
+            finalText.appendChild(span);
+          });
+          applyWordGuard(finalText);
+        } else {
+          setStyledText(finalText, btn.dataset.final);
+        }
         finalText.classList.remove('hidden');
         finalText.classList.add('fade-in', 'final-click-text');
         finalTextReady = true;
