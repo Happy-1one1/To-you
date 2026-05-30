@@ -88,6 +88,31 @@
       position: relative;
     }
 
+    .page.page-scroll {
+      justify-content: flex-start;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding-top: 70px;
+      padding-bottom: 92px;
+      scrollbar-width: none;
+      touch-action: pan-y;
+    }
+
+    .page.page-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .page.page-scroll .card {
+      margin: auto 0;
+      overflow: visible;
+    }
+
+    .page.page-scroll.opened-content .card {
+      margin: 0;
+    }
+
     .card {
       width: 100%;
       max-width: 360px;
@@ -1112,6 +1137,20 @@
       text-shadow: 0 3px 12px rgba(255, 160, 190, 0.16);
     }
 
+    .confess-page-scroll-tip {
+      margin-top: 8px;
+      color: #e46b98;
+      font-size: 13.5px;
+      font-weight: 900;
+      opacity: 0.82;
+      animation: softTipPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes softTipPulse {
+      0%, 100% { opacity: 0.62; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(2px); }
+    }
+
 
 
     .future-note-cover {
@@ -1578,8 +1617,8 @@
 <button class="cute-btn hidden" data-go="5" id="reasonDone">还有一句最重要的话</button>
 </div>
 </div>
-<div class="page">
-<div class="card">
+<div class="page page-scroll" id="confessPage">
+<div class="card confess-scroll-card">
 <h2>这句话，我想认真说</h2>
 <p>我把最想说的话藏进一封小小的信里，轻轻点开它。</p>
 <div class="confess-stage" id="confessStage">
@@ -1600,6 +1639,7 @@
             也并不是我喜欢的样子你都有，<span class="ending-nowrap">而是你的样子我都喜欢！</span>
 </div>
 <button class="cute-btn hidden" data-go="6" id="confessDone">关于以后，我还想说</button>
+<div class="confess-page-scroll-tip hidden" id="confessScrollTip">轻轻向上滑一下，还能继续看下面。</div>
 </div>
 </div>
 <div class="page">
@@ -1685,6 +1725,8 @@
     function goTo(index) {
       current = Math.max(0, Math.min(index, totalPages - 1));
       pages.style.transform = `translateX(${-current * pageWidth()}px)`;
+      const activePage = document.querySelectorAll('.page')[current];
+      if (activePage) activePage.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       refreshPageFloatingDecorations();
     }
 
@@ -1723,10 +1765,13 @@
           confessOpened = false;
           confessStage.classList.remove('opened');
           confessEnvelope.classList.remove('opened');
+          confessPage.classList.remove('opened-content');
           heartHint.textContent = '点开这封信，我想把这句话认真告诉你。';
           confessText.classList.add('hidden');
           confessText.classList.remove('fade-in');
           confessDone.classList.add('hidden');
+          confessScrollTip.classList.add('hidden');
+          confessPage.scrollTo({ top: 0, left: 0, behavior: 'auto' });
           break;
         case 6:
           futureLetter.classList.add('hidden');
@@ -1874,11 +1919,13 @@
       }
     });
 
+    const confessPage = document.getElementById('confessPage');
     const confessStage = document.getElementById('confessStage');
     const confessEnvelope = document.getElementById('confessEnvelope');
     const heartHint = document.getElementById('heartHint');
     const confessText = document.getElementById('confessText');
     const confessDone = document.getElementById('confessDone');
+    const confessScrollTip = document.getElementById('confessScrollTip');
     let confessOpened = false;
 
     confessEnvelope.addEventListener('click', () => {
@@ -1886,11 +1933,16 @@
       confessOpened = true;
       confessStage.classList.add('opened');
       confessEnvelope.classList.add('opened');
+      confessPage.classList.add('opened-content');
       setStyledText(heartHint, '这句话，是我认真想说的。');
       setTimeout(() => {
         confessText.classList.remove('hidden');
         confessText.classList.add('fade-in');
         confessDone.classList.remove('hidden');
+        confessScrollTip.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          confessPage.scrollTo({ top: confessPage.scrollHeight, behavior: 'smooth' });
+        });
         burstHearts(16);
       }, 520);
     });
